@@ -17,16 +17,16 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/school/attendance")
+@RequestMapping("/api/v1/school")
 @RequiredArgsConstructor
 public class AttendanceController {
     private final AttendanceService attendanceService;
 
-    @GetMapping("/attendances/student")
+    @GetMapping("/attendance/student")
     public ResponseEntity<List<GetStudentAttendanceResponseDto>> getStudentAttendanceByParam(@RequestParam(required = false) Map<String, String> search, @PageableDefault(page = 0, size = 10) Pageable pageable, HttpServletRequest request){
         return ResponseEntity.ok(attendanceService.getStudentAttendance(search,pageable,request));
     }
-    @GetMapping("/attendances/teacher")
+    @GetMapping("/attendance/teacher")
     public ResponseEntity<List<GetAllAttendanceResponseDto>> getTeacherAttendance(HttpServletRequest request){
         return ResponseEntity.ok(attendanceService.getAllAttendanceByTeacherId(request));
     }

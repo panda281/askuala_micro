@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/school/subject")
+@RequestMapping("/api/v1/school")
 @RequiredArgsConstructor
 public class SubjectController {
     private final SubjectService subjectService;
@@ -43,11 +43,11 @@ public class SubjectController {
     {
         return ResponseEntity.ok(subjectService.deleteSubject(id));
     }
-    @GetMapping("/subjects/teacher")
+    @GetMapping("/teacher/subject")
     public ResponseEntity<List<TeacherSubjectResponse>> getTeacherSubjects(HttpServletRequest request){
         return ResponseEntity.ok(subjectService.getTeacherSubject(request));
     }
-    @GetMapping("/subjects/student")
+    @GetMapping("/student/subject")
     public ResponseEntity<List<StudentSubjectResponse>> getStudentSubjects(HttpServletRequest request){
         return ResponseEntity.ok(subjectService.getStudentSubject(request));
     }

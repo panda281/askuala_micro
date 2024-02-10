@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/school/student")
+@RequestMapping("/api/v1/school")
 public class StudentController {
     private final StudentService studentService;
 
@@ -39,7 +39,6 @@ public class StudentController {
 
 
     @GetMapping("/students")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Student>> getAllStudents(@PageableDefault(page = 0, size = 10) @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(studentService.getAllStudents(pageable));
     }

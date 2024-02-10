@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/school/grade-section")
+@RequestMapping("/api/v1/school")
 @RequiredArgsConstructor
 public class GradeSectionController {
     private final GradeSectionService gradeSectionService;
