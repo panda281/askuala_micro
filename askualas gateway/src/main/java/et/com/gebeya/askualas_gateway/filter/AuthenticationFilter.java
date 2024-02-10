@@ -53,6 +53,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                         .flatMap(response -> {
                             ServerHttpRequest mutatedHttpRequest = exchange.getRequest().mutate()
                                     .header("Role", response.getRole().toString())
+                                    .header("RoleId",response.getRoleId().toString())
                                     .build();
                             ServerWebExchange mutatedExchange = exchange.mutate().request(mutatedHttpRequest).build();
                             return chain.filter(mutatedExchange);

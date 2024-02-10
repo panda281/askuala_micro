@@ -54,8 +54,7 @@ public class AuthenticationService {
         final String userName;
         userName = jwtService.extractUserName(validationRequest.getToken());
         System.out.println(SecurityContextHolder.getContext().getAuthentication());
-        if (StringUtils.isNotEmpty(userName)
-               ) {
+        if (StringUtils.isNotEmpty(userName)) {
             Users users = usersService.loadUserByUsername(userName);
             if (jwtService.isTokenValid(validationRequest.getToken(), users)) {
                 ValidationResponse response = ValidationResponse.builder()
