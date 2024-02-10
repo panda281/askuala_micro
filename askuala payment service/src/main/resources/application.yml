@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Payment-Service
+    name: PAYMENT-SERVICE
   datasource:
     password: ${payment.db.password}
     username: ${payment.db.username}
@@ -12,8 +12,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-server:
-  port: 5050
 
+#Service Discovery
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 0
 
 

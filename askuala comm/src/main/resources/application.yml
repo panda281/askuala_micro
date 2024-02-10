@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: Com-Service
+
+
+app:
+  telegram:
+    username: BookTestTrialBot
+    token: 6425742378:AAHACiqd2rjvTxJ0HBSrl7hf_s7yVMgih4Q
+
+
+#Service Discovery
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 0
+
+logging:
+  level:
+    org.springframework.cloud: debug

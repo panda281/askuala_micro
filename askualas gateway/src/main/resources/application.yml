@@ -1,0 +1,44 @@
+spring:
+
+  main:
+    web-application-type: reactive
+
+  cloud:
+    gateway:
+      routes:
+        - id: Academic-Service
+          uri: lb://Academic-Service
+          predicates:
+            - Path=/api/v1/school/**
+          filters:
+            - AuthenticationFilter
+
+
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+          filters:
+            - AuthenticationFilter
+
+        - id: Auth-Service
+          uri: lb://Auth-Service
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            - AuthenticationFilter
+
+
+
+
+  application:
+    name: ASKUALA-GATEWAY
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka
+
+
+server:
+  port: 8181
