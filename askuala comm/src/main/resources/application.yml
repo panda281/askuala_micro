@@ -1,7 +1,17 @@
 spring:
   application:
     name: Com-Service
-
+  mail:
+    host: mail.abinet.dev
+    port: 587
+    username: askuala@abinet.dev
+    password: FPFzjDbzFwUKh9DjYP79
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 app:
   telegram:
@@ -21,3 +31,8 @@ server:
 logging:
   level:
     org.springframework.cloud: debug
+
+
+    org:
+      springframework:
+        kafka=DEBUG:

@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 @Builder
 public class PaymentResponseDto {
     private String studentId;
-    private BigDecimal price;
+    private Double price;
     private PaymentStatus paymentStatus;
 }

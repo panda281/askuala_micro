@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaymentService {
     private final PaymentRepository paymentRepository;
-    public ResponseEntity<PaymentResponseDto> createPayment(PaymentRequestDto dto)
+    public Payment createPayment(PaymentRequestDto dto)
     {
         Payment payment = MappingUtil.mappingPaymentDtoToModel(dto);
-        payment=paymentRepository.save(payment);
-        return ResponseEntity.ok(MappingUtil.mappingModelToPaymentDto(payment));
+        return payment=paymentRepository.save(payment);
+
     }
 }

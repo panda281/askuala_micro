@@ -2,6 +2,7 @@ package et.com.gebeya.askuala_payment_service.util;
 
 import et.com.gebeya.askuala_payment_service.dto.requestdto.PaymentRequestDto;
 import et.com.gebeya.askuala_payment_service.dto.responsedto.PaymentResponseDto;
+import et.com.gebeya.askuala_payment_service.enums.PaymentStatus;
 import et.com.gebeya.askuala_payment_service.model.Payment;
 
 public class MappingUtil {
@@ -13,7 +14,7 @@ public class MappingUtil {
         return Payment.builder()
                 .studentId(dto.getStudentId())
                 .price(dto.getPrice())
-                .paymentStatus(dto.getPaymentStatus())
+                .paymentStatus(PaymentStatus.PENDING)
                 .build();
     }
 

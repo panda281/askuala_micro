@@ -37,7 +37,7 @@ public class Student extends Person{
 
     @JsonIgnoreProperties("studentList")
 //    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "student_gurdian",
             joinColumns = @JoinColumn(name = "student_id"),

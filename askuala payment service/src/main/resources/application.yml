@@ -4,7 +4,7 @@ spring:
   datasource:
     password: ${payment.db.password}
     username: ${payment.db.username}
-    url: jdbc:postgresql://localhost:5432/payment
+    url: jdbc:postgresql://localhost:5432/askuala
   jpa:
     hibernate:
       ddl-auto: update
