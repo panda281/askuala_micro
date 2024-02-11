@@ -2,10 +2,10 @@ spring:
   application:
     name: Com-Service
   mail:
-    host: mail.abinet.dev
+    host: ${mail.host}
     port: 587
-    username: askuala@abinet.dev
-    password: FPFzjDbzFwUKh9DjYP79
+    username: ${mail.username}
+    password: ${mail.password}
     properties:
       mail:
         smtp:
@@ -15,8 +15,8 @@ spring:
 
 app:
   telegram:
-    username: BookTestTrialBot
-    token: 6425742378:AAHACiqd2rjvTxJ0HBSrl7hf_s7yVMgih4Q
+    username: ${telegram.username}
+    token: ${telegram.token}
 
 
 #Service Discovery
