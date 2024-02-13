@@ -13,9 +13,17 @@ public class RedisService {
     @Qualifier("userstate")
     private final RedisTemplate<Long, UserState> userStateRedisTemplate;
 
-    public RedisService(RedisTemplate<String, Long> userRedisTemplate, RedisTemplate<Long, UserState> userStateRedisTemplate) {
+    @Qualifier("cache")
+    private final RedisTemplate<Long,Long> cacheRedisTemplate;
+
+    @Qualifier("sender")
+    private final RedisTemplate<Long,String> senderRedisTemplate;
+
+    public RedisService(RedisTemplate<String, Long> userRedisTemplate, RedisTemplate<Long, UserState> userStateRedisTemplate, RedisTemplate<Long, Long> cacheRedisTemplate, RedisTemplate<Long, String> senderRedisTemplate) {
         this.userRedisTemplate = userRedisTemplate;
         this.userStateRedisTemplate = userStateRedisTemplate;
+        this.cacheRedisTemplate = cacheRedisTemplate;
+        this.senderRedisTemplate = senderRedisTemplate;
     }
 
     public void setUserState(Long key, UserState value) {
@@ -29,6 +37,23 @@ public class RedisService {
     public UserState getUserState(Long key) {
         try {
             return userStateRedisTemplate.opsForValue().get(key);
+        } catch (JedisException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+
+    }
+
+    public void setCache(Long key, Long value) {
+        try {
+            cacheRedisTemplate.opsForValue().set(key, value);
+        } catch (JedisException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    public Long getCache(Long key) {
+        try {
+            return cacheRedisTemplate.opsForValue().get(key);
         } catch (JedisException ex) {
             throw new RuntimeException(ex.getMessage());
         }
@@ -50,5 +75,23 @@ public class RedisService {
             throw new RuntimeException(ex.getMessage());
         }
     }
+
+    public void setSender(Long key, String value){
+        try{
+            senderRedisTemplate.opsForValue().set(key, value);
+        } catch (JedisException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    public String getSender(Long key){
+        try {
+            return senderRedisTemplate.opsForValue().get(key);
+        } catch (JedisException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+
 
 }

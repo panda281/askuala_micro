@@ -12,4 +12,10 @@ public class Constants {
   public static String idFound(String id){
       return "nice, now write a message that you want to send for user"+id;
   }
+
+  public static String message(String name,String message){
+    return "from "+name+"\nmessage: "+message;
+  }
+
+  public static final String SENT= "Your message has successfully sent\n\nfor whom do you want to text?";
 }

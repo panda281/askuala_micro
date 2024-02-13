@@ -28,4 +28,5 @@ public class AuthController {
     {
         return authenticationService.signIn(credential);
     }
+
 }

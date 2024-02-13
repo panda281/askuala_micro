@@ -8,6 +8,7 @@ public enum UserState {
     TEACHER_TYPE,
     LIST_OF_STUDENT,
     LIST_OF_TEACHER,
-    MESSAGE
+    MESSAGE,
+    NEW_MESSAGE
 
 }
