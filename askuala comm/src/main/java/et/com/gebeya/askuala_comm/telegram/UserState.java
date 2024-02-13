@@ -2,7 +2,7 @@ package et.com.gebeya.askuala_comm.telegram;
 
 public enum UserState {
     START,
-    LOGGED_IN,
+    LOGGEDIN,
     TYPE,
     STUDENT_TYPE,
     TEACHER_TYPE,

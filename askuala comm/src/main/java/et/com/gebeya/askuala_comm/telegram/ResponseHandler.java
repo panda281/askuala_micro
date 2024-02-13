@@ -1,6 +1,7 @@
 package et.com.gebeya.askuala_comm.telegram;
 
 import et.com.gebeya.askuala_comm.dto.LoginRequestDto;
+import et.com.gebeya.askuala_comm.dto.UserDto;
 import et.com.gebeya.askuala_comm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,8 @@ public class ResponseHandler {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText(WELCOME_MESSAGE);
-        redisService.setUserState(chatId, UserState.START);
+//        redisService.setState(chatId,UserState.START);
+        redisService.setCache(chatId,UserDto.builder().state(UserState.START).username("").receiverChatId(0L).build());
         return sendMessage;
     }
 
@@ -33,7 +35,8 @@ public class ResponseHandler {
         sendMessage.setChatId(chatId);
         sendMessage.setText(SUCCESSFUL_LOGIN_MESSAGE);
         sendMessage.setReplyMarkup(keyboardFactory.replyForLoginKeyBoard());
-        redisService.setUserState(chatId,UserState.LOGGED_IN);
+        //todo
+        redisService.setState(chatId,UserState.LOGGEDIN);
         return sendMessage;
     }
 
@@ -47,9 +50,13 @@ public class ResponseHandler {
             sendMessage.setText(UNSUCCESSFUL_LOGIN_MESSAGE);
             return sendMessage;
         } else {
-            redisService.setUserState(chatId, UserState.LOGGED_IN);
+//            redisService.setCache(chatId, UserDto.builder().chatId(0L).username(usernamePassword[0]).build());
+            redisService.setUser(usernamePassword[0],chatId);
+            redisService.setCache(chatId,UserDto.builder().state(UserState.LOGGEDIN).username(usernamePassword[0]).build());
+//            System.out.println(redisService.getUserState(chatId));
+//            System.out.println(redisService.getCache(chatId));
             redisService.setUser(response,chatId);
-            redisService.setSender(chatId,usernamePassword[0]);
+
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatId);
             sendMessage.setText(SUCCESSFUL_LOGIN_MESSAGE);
@@ -61,6 +68,7 @@ public class ResponseHandler {
     }
 
     public SendMessage replyForType(Long chatId, String message) {
+//        System.out.println(redisService.getUserState(chatId));
         if (!(message.equals("Student") || message.equals("Teacher"))) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatId);
@@ -73,14 +81,14 @@ public class ResponseHandler {
                 sendMessage.setChatId(chatId);
                 sendMessage.setText(STUDENT_CHAT_TYPE);
                 sendMessage.setReplyMarkup(keyboardFactory.replyForStudentSearchKeyBoard());
-                redisService.setUserState(chatId, UserState.STUDENT_TYPE);
+                redisService.setState(chatId,UserState.STUDENT_TYPE);
                 return sendMessage;
             } else {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(chatId);
                 sendMessage.setText(TEACHER_CHAT_TYPE);
                 sendMessage.setReplyMarkup(keyboardFactory.replyForTeacherSearchKeyBoard());
-                redisService.setUserState(chatId, UserState.TEACHER_TYPE);
+                redisService.setState(chatId,UserState.TEACHER_TYPE);
                 return sendMessage;
             }
         }
@@ -109,15 +117,16 @@ public class ResponseHandler {
                 sendMessage.setChatId(chatId);
                 sendMessage.setText(ID_NOTFOUND);
                 sendMessage.setReplyMarkup(keyboardFactory.replyForLoginKeyBoard());
-                redisService.setUserState(chatId,UserState.LOGGED_IN);
+                redisService.setState(chatId,UserState.LOGGEDIN);
                 return sendMessage;
             }
             else {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(chatId);
                 sendMessage.setText(idFound(userName));
-                redisService.setCache(chatId,redisService.getUser(userName));
-                redisService.setUserState(chatId,UserState.MESSAGE);
+
+                UserDto userDto = redisService.getCache(chatId);
+                redisService.setCache(chatId,UserDto.builder().state(UserState.MESSAGE).username(userDto.getUsername()).receiverChatId(redisService.getUser(userName)).build());
                 return sendMessage;
             }
         }
@@ -125,15 +134,18 @@ public class ResponseHandler {
 
     public List<SendMessage> replyForMessage(Long chatId, String message){
         SendMessage receiverMessage = new SendMessage();
-        receiverMessage.setChatId(redisService.getCache(chatId));
-        receiverMessage.setText(message(redisService.getSender(chatId),message));
+        receiverMessage.setChatId(redisService.getCache(chatId).getReceiverChatId());
+        receiverMessage.setText(message(redisService.getCache(chatId).getUsername(),message));
         receiverMessage.setReplyMarkup(keyboardFactory.replyForCancelReply());
-        redisService.setCache(redisService.getCache(chatId),chatId);
+        UserDto userDto = redisService.getCache(redisService.getCache(chatId).getReceiverChatId());
+        userDto.setReceiverChatId(chatId);
+        userDto.setState(UserState.MESSAGE);
+        redisService.setCache(userDto.getReceiverChatId(),userDto);
         SendMessage senderMessage = new SendMessage();
         senderMessage.setChatId(chatId);
         senderMessage.setText(SENT);
         senderMessage.setReplyMarkup(keyboardFactory.replyForLoginKeyBoard());
-        redisService.setUserState(chatId, UserState.LOGGED_IN);
+        redisService.setState(chatId, UserState.LOGGEDIN);
         return List.of(receiverMessage,senderMessage);
     }
 

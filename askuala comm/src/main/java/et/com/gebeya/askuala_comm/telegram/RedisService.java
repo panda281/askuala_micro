@@ -1,5 +1,6 @@
 package et.com.gebeya.askuala_comm.telegram;
 
+import et.com.gebeya.askuala_comm.dto.UserDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -10,40 +11,19 @@ import redis.clients.jedis.exceptions.JedisException;
 public class RedisService {
     @Qualifier("user")
     private final RedisTemplate<String, Long> userRedisTemplate;
-    @Qualifier("userstate")
-    private final RedisTemplate<Long, UserState> userStateRedisTemplate;
 
     @Qualifier("cache")
-    private final RedisTemplate<Long,Long> cacheRedisTemplate;
+    private final RedisTemplate<Long, UserDto> cacheRedisTemplate;
 
-    @Qualifier("sender")
-    private final RedisTemplate<Long,String> senderRedisTemplate;
 
-    public RedisService(RedisTemplate<String, Long> userRedisTemplate, RedisTemplate<Long, UserState> userStateRedisTemplate, RedisTemplate<Long, Long> cacheRedisTemplate, RedisTemplate<Long, String> senderRedisTemplate) {
+    public RedisService(RedisTemplate<String, Long> userRedisTemplate,  RedisTemplate<Long, UserDto> cacheRedisTemplate) {
         this.userRedisTemplate = userRedisTemplate;
-        this.userStateRedisTemplate = userStateRedisTemplate;
         this.cacheRedisTemplate = cacheRedisTemplate;
-        this.senderRedisTemplate = senderRedisTemplate;
     }
 
-    public void setUserState(Long key, UserState value) {
-        try {
-            userStateRedisTemplate.opsForValue().set(key, value);
-        } catch (JedisException ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
-    }
 
-    public UserState getUserState(Long key) {
-        try {
-            return userStateRedisTemplate.opsForValue().get(key);
-        } catch (JedisException ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
 
-    }
-
-    public void setCache(Long key, Long value) {
+    public void setCache(Long key, UserDto value) {
         try {
             cacheRedisTemplate.opsForValue().set(key, value);
         } catch (JedisException ex) {
@@ -51,7 +31,7 @@ public class RedisService {
         }
     }
 
-    public Long getCache(Long key) {
+    public UserDto getCache(Long key) {
         try {
             return cacheRedisTemplate.opsForValue().get(key);
         } catch (JedisException ex) {
@@ -76,22 +56,18 @@ public class RedisService {
         }
     }
 
-    public void setSender(Long key, String value){
+
+    public void setState(Long key,UserState state){
         try{
-            senderRedisTemplate.opsForValue().set(key, value);
-        } catch (JedisException ex) {
+            UserDto userDto = cacheRedisTemplate.opsForValue().get(key);
+            assert userDto != null;
+            userDto.setState(state);
+            cacheRedisTemplate.opsForValue().set(key,userDto);
+        }
+        catch (JedisException ex) {
             throw new RuntimeException(ex.getMessage());
         }
     }
-
-    public String getSender(Long key){
-        try {
-            return senderRedisTemplate.opsForValue().get(key);
-        } catch (JedisException ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
-    }
-
 
 
 }

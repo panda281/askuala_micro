@@ -42,19 +42,19 @@ public class BotStarter extends TelegramLongPollingBot {
             Long chatId = message.getChatId();
             String text = message.getText();
 
-            if (text.equals("/start") && redisService.getUserState(chatId)==null) {
+            if (text.equals("/start") && redisService.getCache(chatId)==null) {
                 execute(responseHandler.replyForWelcome(chatId));
-            } else if (text.equals("/start") && redisService.getUserState(chatId) != null && redisService.getUserState(chatId) != UserState.START) {
+            } else if (text.equals("/start") && redisService.getCache(chatId) != null && redisService.getCache(chatId).getState() != UserState.START) {
                 execute(responseHandler.replyForAlreadyLoginUser(chatId));
-            } else if (redisService.getUserState(chatId) != null && redisService.getUserState(chatId).equals(UserState.START)) {
+            } else if (redisService.getCache(chatId) != null && redisService.getCache(chatId).getState().equals(UserState.START)) {
                 execute(responseHandler.replyForLogin(chatId, text));
-            } else if (redisService.getUserState(chatId) != null && redisService.getUserState(chatId).equals(UserState.LOGGED_IN)) {
+            } else if (redisService.getCache(chatId) != null && redisService.getCache(chatId).getState().equals(UserState.LOGGEDIN)) {
                 execute(responseHandler.replyForType(chatId, text));
-            } else if (redisService.getUserState(chatId) != null && redisService.getUserState(chatId).equals(UserState.STUDENT_TYPE)) {
+            } else if (redisService.getCache(chatId) != null && redisService.getCache(chatId).getState().equals(UserState.STUDENT_TYPE)) {
                 execute(responseHandler.replyForStudentOrTeacherType(chatId, text));
-            } else if (redisService.getUserState(chatId) != null && redisService.getUserState(chatId).equals(UserState.TEACHER_TYPE)) {
+            } else if (redisService.getCache(chatId) != null && redisService.getCache(chatId).getState().equals(UserState.TEACHER_TYPE)) {
                 execute(responseHandler.replyForStudentOrTeacherType(chatId, text));
-            } else if (redisService.getUserState(chatId) != null && redisService.getUserState(chatId).equals(UserState.MESSAGE)) {
+            } else if (redisService.getCache(chatId) != null && redisService.getCache(chatId).getState().equals(UserState.MESSAGE)) {
                 List<SendMessage> sendMessages = responseHandler.replyForMessage(chatId, text);
                 execute(sendMessages.get(0));
                 execute(sendMessages.get(1));

@@ -1,11 +1,13 @@
 package et.com.gebeya.askuala_comm.config;
 
+import et.com.gebeya.askuala_comm.dto.UserDto;
 import et.com.gebeya.askuala_comm.telegram.UserState;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -47,28 +49,23 @@ public class RedisConfig {
     }
 
     @Bean(name = "cache")
-    public RedisTemplate<Long, Long> cacheRedisTemplate() {
-        RedisTemplate<Long, Long> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<Long, UserDto> cacheRedisTemplate() {
+        RedisTemplate<Long, UserDto> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
 
+        // Set key serializer to convert Long to String
         redisTemplate.setKeySerializer(new GenericToStringSerializer<>(Long.class));
-        redisTemplate.setValueSerializer(new GenericToStringSerializer<>(Long.class));
+        redisTemplate.setHashKeySerializer(new GenericToStringSerializer<>(Long.class));
+
+        // Set value serializer to JSON serializer
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(UserDto.class));
+        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(UserDto.class));
 
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 
-    @Bean(name = "sender")
-    public RedisTemplate<Long, String> senderRedisTemplate() {
-        RedisTemplate<Long, String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
 
-        redisTemplate.setKeySerializer(new GenericToStringSerializer<>(Long.class));
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
-    }
 
 
 
